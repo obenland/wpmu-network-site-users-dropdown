@@ -2,7 +2,7 @@
 /** wpmu-network-site-users-dropdown.php
  * 
  * Plugin Name: WPMU Network Site Users Dropdown
- * Plugin URI: http://www.obenlands.de/portfolio/wpmu-network-site-users-dropdown
+ * Plugin URI: http://www.obenlands.de/en/portfolio/wpmu-network-site-users-dropdown
  * Description: Replaces the input field for adding existing users to a site with a more comfortable dropdown menu.
  * Version: 1.0
  * Author: Konstantin Obenland
