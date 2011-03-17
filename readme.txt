@@ -1,5 +1,5 @@
 === WPMU Network Site Users Dropdown ===
-Contributors: Konstantin Obenland
+Contributors: kobenland
 Tags: admin, wpmu, network, network admin
 Requires at least: 3.1
 Tested up to: 3.1
