@@ -1,16 +1,47 @@
 <?php 
 /** wpmu-network-site-users-dropdown.php
  * 
- * Plugin Name: WPMU Network Site Users Dropdown
- * Plugin URI: http://www.obenlands.de/en/portfolio/wpmu-network-site-users-dropdown
- * Description: Replaces the input field for adding existing users to a site with a more comfortable dropdown menu.
- * Version: 1.0
- * Author: Konstantin Obenland
- * Author URI: http://www.obenlands.de
- * License: GPL2
+ * Plugin Name:	WPMU Network Site Users Dropdown
+ * Plugin URI:	http://www.obenlands.de/en/portfolio/wpmu-network-site-users-dropdown/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
+ * Description:	Replaces the input field for adding existing users to a site with a more comfortable dropdown menu.
+ * Version:		1.1
+ * Author:		Konstantin Obenland
+ * Author URI:	http://www.obenlands.de/en/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
+ * Text Domain:	wpmu-network-site-users-dropdown
+ * Domain Path:	/lang
+ * License:		GPLv2
  */
 
-class WPMU_Network_Site_Users_Dropdown {
+
+if( ! class_exists('Obenland_Wp_Plugins') ) {
+	require_once('obenland-wp-plugins.php');
+}
+
+
+register_activation_hook( __FILE__, array(
+	'Obenland_WPMU_Network_Site_Users_Dropdown',
+	'activation'
+));
+
+
+class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// PROPERTIES, PROTECTED
+	///////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * The plugins' text domain
+	 * 
+	 * @author	Konstantin Obenland
+	 * @since	1.1 - 03.04.2011
+	 * @access	protected
+	 * @static
+	 * 
+	 * @var		string
+	 */
+	protected static $plugin_textdomain	=	'wpmu-network-site-users-dropdown';
 	
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -26,9 +57,15 @@ class WPMU_Network_Site_Users_Dropdown {
 	 * @since	1.0
 	 * @access	public
 	 * 
-	 * @return	void
+	 * @return	Obenland_WPMU_Network_Site_Users_Dropdown
 	 */
-	public function __construct () {
+	public function __construct() {
+		
+		parent::__construct( array(
+			'textdomain'		=>	self::$plugin_textdomain,
+			'plugin_name'		=>	plugin_basename(__FILE__),
+			'donate_link_id'	=>	'HEXL3UM8D7R6N'
+		));
 		
 		add_action( 'network_site_users_after_list_table', array(
 			&$this,
@@ -39,6 +76,27 @@ class WPMU_Network_Site_Users_Dropdown {
 			'show_network_site_users_add_existing_form',
 			'__return_false'
 		);
+	}
+	
+	
+	/**
+	 * Checks whether we are on a multisite install and bails if not. The
+	 * plugin will stay deactivated.
+	 *
+	 * @author	Konstantin Obenland
+	 * @since	1.1 - 03.04.2011
+	 * @access	public
+	 * @static
+	 *
+	 * @return	void
+	 */
+	public static function activation() {
+		load_plugin_textdomain( self::$plugin_textdomain , false, self::$plugin_textdomain . '/lang' );
+	
+		if (  is_multisite() ) {
+			_e( 'This plugin requires multisite to be enabled!', self::$plugin_textdomain );
+			exit;
+		}
 	}
 	
 	
@@ -55,7 +113,7 @@ class WPMU_Network_Site_Users_Dropdown {
 	 * 
 	 * @return	void
 	 */
-	public function network_site_users_after_list_table () {
+	public function network_site_users_after_list_table() {
 		global $editblog_roles, $id, $default_role;
 		
 		// Get all registered Users
@@ -78,7 +136,7 @@ class WPMU_Network_Site_Users_Dropdown {
 			<?php else : ?>
 		<p><?php _e( 'You may add from existing network users to this site.' ); ?></p>
 			<?php endif; ?>
-		<h5 id="add-existing-user"><?php _e('Add Existing User') ?></h5>
+		<h5 id="add-existing-user"><?php _e('Add Existing User'); ?></h5>
 		<form action="site-users.php?action=adduser" id="adduser" method="post">
 			<?php wp_nonce_field( 'edit-site' ); ?>
 			<input type="hidden" name="id" value="<?php echo esc_attr( $id ) ?>" />
@@ -88,19 +146,19 @@ class WPMU_Network_Site_Users_Dropdown {
 					<td>
 						<select name="newuser" id="newuser">
 						<?php 
-						foreach( $users as $user ){
-						echo "\t" . '<option value="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->display_name ) . '</option>';
+						foreach( $users as $user ) {
+							echo "\t" . '<option value="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->display_name ) . '</option>';
 						}
 						?>
 						</select>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php _e( 'Role'); ?></th>
+					<th scope="row"><?php _e( 'Role' ); ?></th>
 					<td><select name="new_role" id="new_role_0">
 					<?php
 					reset( $editblog_roles );
-					foreach ( $editblog_roles as $role => $role_assoc ){
+					foreach ( $editblog_roles as $role => $role_assoc ) {
 						$name = translate_user_role( $role_assoc['name'] );
 						$selected = ( $role == $default_role ) ? ' selected="selected"' : '';
 						echo '<option' . $selected . ' value="' . esc_attr( $role ) . '">' . esc_html( $name ) . '</option>';
@@ -109,7 +167,7 @@ class WPMU_Network_Site_Users_Dropdown {
 					</select></td>
 				</tr>
 			</table>
-			<?php wp_nonce_field( 'add-user', '_wpnonce_add-user' ) ?>
+			<?php wp_nonce_field( 'add-user', '_wpnonce_add-user' ); ?>
 			<?php submit_button( __('Add User'), 'primary', 'add-user' ); ?>
 		</form>
 		<?php endif;
@@ -139,10 +197,11 @@ class WPMU_Network_Site_Users_Dropdown {
         return ($all_users->ID > $current_users->ID) ? 1 : -1;
 	}
 	
-} // End Class WPMU_Network_Site_Users_Dropdown
+} // End Class Obenland_WPMU_Network_Site_Users_Dropdown
 
-if ( is_network_admin() ){
-	new WPMU_Network_Site_Users_Dropdown;
+
+if ( is_network_admin() OR 'plugins.php' == $pagenow ){
+	new Obenland_WPMU_Network_Site_Users_Dropdown;
 }
 
 
