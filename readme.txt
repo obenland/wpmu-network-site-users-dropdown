@@ -1,5 +1,5 @@
 === WPMU Network Site Users Dropdown ===
-Contributors: Konstantin Obenland
+Contributors: kobenland
 Tags: admin, wpmu, network, network admin
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HEXL3UM8D7R6N
 Requires at least: 3.1
