@@ -4,7 +4,7 @@
  * Plugin Name:	WPMU Network Site Users Dropdown
  * Plugin URI:	http://www.obenlands.de/en/portfolio/wpmu-network-site-users-dropdown/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
  * Description:	Replaces the input field for adding existing users to a site with a more comfortable dropdown menu.
- * Version:		1.2
+ * Version:		1.3
  * Author:		Konstantin Obenland
  * Author URI:	http://www.obenlands.de/en/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
  * Text Domain:	wpmu-network-site-users-dropdown
@@ -116,15 +116,21 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 	public function network_site_users_after_list_table() {
 		global $editblog_roles, $id, $default_role;
 		
-		// Get all registered Users
-		$all_users = get_users(array(
-			'blog_id'	=> ''
+		// Exclude users, who are already associated with the current site
+		$exclude = get_users(array(
+			'blog_id'	=>	$id,
+			'fields'	=>	''
 		));
 		
-		// Weed out all users, who are allready associated with the current site
-		$users = array_udiff( $all_users, get_users(), array(
-			&$this,
-			'addable_users_callback'
+		// Get all other users
+		$users = get_users(array(
+			'blog_id'	=>	'',
+			'orderby'	=>	'user_nicename',
+			'exclude'	=>	$exclude,
+			'fields'	=>	array(
+				'user_login',
+				'display_name'
+			)
 		));
 
 		if ( current_user_can( 'promote_users' ) AND ! empty( $users ) ) : ?>
@@ -147,7 +153,7 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 						<select name="newuser" id="newuser">
 						<?php 
 						foreach( $users as $user ) {
-							echo "\t" . '<option value="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->display_name ) . '</option>';
+							echo '<option value="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->display_name ) . '</option>';
 						}
 						?>
 						</select>
@@ -173,36 +179,32 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 		<?php endif;
 	}
 	
-	
-	/////////////////////////////////////////////////////////////////////////////
-	// METHODS, PROTECTED
-	/////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Compares the objects and returns whether they match or not.
-	 * 
-	 * @author	Konstantin Obenland
-	 * @since	1.0
-	 * @access	protected
-	 * 
-	 * @param	stdClass	$all_users
-	 * @param	stdClass	$current_users
-	 * 
-	 * @return	int
-	 */
-	protected function addable_users_callback ($all_users, $current_users) {
-		if ($all_users->ID === $current_users->ID) {
-			return 0;
-		}
-        return ($all_users->ID > $current_users->ID) ? 1 : -1;
-	}
-	
 } // End Class Obenland_WPMU_Network_Site_Users_Dropdown
 
 
-if ( is_network_admin() OR 'plugins.php' == $pagenow ){
-	new Obenland_WPMU_Network_Site_Users_Dropdown;
+/**
+ * Instantiates the class based on certain conditions
+ * 
+ * @author	Konstantin Obenland
+ * @since	1.3 - 03.05.2011
+ * @global	$pagenow
+ * 
+ * @return	void
+ */
+function wpmunsud_instantiate() {
+	global $pagenow;
+	
+	$plugins = get_site_option( 'active_sitewide_plugins');
+
+	if (
+		is_network_admin()
+	OR
+		( !isset($plugins[plugin_basename(__FILE__)]) AND 'plugins.php' == $pagenow )
+	){
+		new Obenland_WPMU_Network_Site_Users_Dropdown;
+	}
 }
+add_action( 'plugins_loaded', 'wpmunsud_instantiate' );
 
 
 /* End of file wpmu-network-site-users-dropdown.php */
