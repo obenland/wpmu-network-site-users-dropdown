@@ -1,6 +1,6 @@
-<?php 
+<?php
 /** wpmu-network-site-users-dropdown.php
- * 
+ *
  * Plugin Name:	WPMU Network Site Users Dropdown
  * Plugin URI:	http://www.obenlands.de/en/portfolio/wpmu-network-site-users-dropdown/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
  * Description:	Replaces the input field for adding existing users to a site with a more comfortable dropdown menu.
@@ -27,42 +27,25 @@ register_activation_hook( __FILE__, array(
 class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 	
 	
-	///////////////////////////////////////////////////////////////////////////
-	// PROPERTIES, PROTECTED
-	///////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * The plugins' text domain
-	 * 
-	 * @author	Konstantin Obenland
-	 * @since	1.1 - 03.04.2011
-	 * @access	protected
-	 * @static
-	 * 
-	 * @var		string
-	 */
-	protected static $plugin_textdomain	=	'wpmu-network-site-users-dropdown';
-	
-	
 	/////////////////////////////////////////////////////////////////////////////
 	// METHODS, PUBLIC
 	/////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * Adds all necessary filters
-	 * 
+	 *
 	 * @author	Konstantin Obenland
 	 * @since	1.0
 	 * @access	public
-	 * 
+	 *
 	 * @return	Obenland_WPMU_Network_Site_Users_Dropdown
 	 */
 	public function __construct() {
 		
 		parent::__construct( array(
-			'textdomain'		=>	self::$plugin_textdomain,
+			'textdomain'		=>	'wpmu-network-site-users-dropdown',
 			'plugin_name'		=>	plugin_basename(__FILE__),
 			'donate_link_id'	=>	'HEXL3UM8D7R6N'
 		));
@@ -91,10 +74,10 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 	 * @return	void
 	 */
 	public static function activation() {
-		load_plugin_textdomain( self::$plugin_textdomain , false, self::$plugin_textdomain . '/lang' );
+		load_plugin_textdomain( 'wpmu-network-site-users-dropdown' , false, 'wpmu-network-site-users-dropdown/lang' );
 	
 		if ( ! is_multisite() ) {
-			_e( 'This plugin requires multisite to be enabled!', self::$plugin_textdomain );
+			_e( 'This plugin requires multisite to be enabled!', 'wpmu-network-site-users-dropdown' );
 			exit;
 		}
 	}
@@ -102,15 +85,15 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 	
 	/**
 	 * Displays the dropdown form
-	 * 
+	 *
 	 * @author	Konstantin Obenland
 	 * @since	1.0
 	 * @access	public
-	 * 
+	 *
 	 * @global	$editblog_roles
 	 * @global	$id
 	 * @global	$default_role
-	 * 
+	 *
 	 * @return	void
 	 */
 	public function network_site_users_after_list_table() {
@@ -151,7 +134,7 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 					<th scope="row"><?php _e( 'Username' ); ?></th>
 					<td>
 						<select name="newuser" id="newuser">
-						<?php 
+						<?php
 						foreach( $users as $user ) {
 							echo '<option value="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->display_name ) . '</option>';
 						}
@@ -184,11 +167,11 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins {
 
 /**
  * Instantiates the class based on certain conditions
- * 
+ *
  * @author	Konstantin Obenland
  * @since	1.3 - 03.05.2011
  * @global	$pagenow
- * 
+ *
  * @return	void
  */
 function wpmunsud_instantiate() {

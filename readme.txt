@@ -3,8 +3,8 @@ Contributors: kobenland
 Tags: admin, wpmu, network, network admin
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HEXL3UM8D7R6N
 Requires at least: 3.1
-Tested up to: 3.1.2
-Stable tag: 1.3
+Tested up to: 3.3.1
+Stable tag: 1.4
 
 Replace the input field for adding existing users to a site with a more comfortable dropdown menu!
 
@@ -39,6 +39,10 @@ None asked yet.
 
 == Changelog ==
 
+= 1.4 =
+* Updated textdomain handling for translation
+* Tested for WordPress 3.3.1
+
 = 1.3 =
 * Fixed a bug where already associated users were in the dropdown field
 * Updated function class
@@ -57,4 +61,5 @@ None asked yet.
 * Initial Release
 
 
-== Upgrade Notice ==
+== Upgrade Notice == 
+Maintenance update
