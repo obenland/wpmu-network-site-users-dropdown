@@ -4,7 +4,7 @@ Tags: admin, wpmu, network, network admin
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HEXL3UM8D7R6N
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 1.4
+Stable tag: 1.4.1
 
 Replace the input field for adding existing users to a site with a more comfortable dropdown menu!
 
@@ -38,6 +38,10 @@ None asked yet.
 
 
 == Changelog ==
+
+= 1.4.1 =
+* Improved user experience when plugin is activated on a non-multisite environment.
+* Updated utility class
 
 = 1.4 =
 * Updated textdomain handling for translation
