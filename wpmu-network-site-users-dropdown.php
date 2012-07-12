@@ -4,7 +4,7 @@
  * Plugin Name:	WPMU Network Site Users Dropdown
  * Plugin URI:	http://www.obenlands.de/en/portfolio/wpmu-network-site-users-dropdown/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
  * Description:	Replaces the input field for adding existing users to a site with a more comfortable dropdown menu.
- * Version:		1.4.1
+ * Version:		1.4.2
  * Author:		Konstantin Obenland
  * Author URI:	http://www.obenlands.de/en/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
  * Text Domain:	wpmu-network-site-users-dropdown
@@ -13,9 +13,10 @@
  */
 
 
-if ( ! class_exists('Obenland_Wp_Plugins_v15') ) {
-	require_once('obenland-wp-plugins.php');
+if ( ! class_exists( 'Obenland_Wp_Plugins_v300' ) ) {
+	require_once( 'obenland-wp-plugins.php' );
 }
+
 
 
 register_activation_hook( __FILE__, array(
@@ -24,7 +25,7 @@ register_activation_hook( __FILE__, array(
 ));
 
 
-class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_v15 {
+class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_v300 {
 	
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -94,13 +95,13 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_v15 
 		global $editblog_roles, $id, $default_role;
 		
 		// Exclude users, who are already associated with the current site
-		$exclude = get_users(array(
+		$exclude = get_users( array(
 			'blog_id'	=>	$id,
 			'fields'	=>	''
-		));
+		) );
 		
 		// Get all other users
-		$users = get_users(array(
+		$users = get_users( array(
 			'blog_id'	=>	'',
 			'orderby'	=>	'user_nicename',
 			'exclude'	=>	$exclude,
@@ -108,10 +109,10 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_v15 
 				'user_login',
 				'display_name'
 			)
-		));
+		) );
 
 		if ( current_user_can( 'promote_users' ) AND ! empty( $users ) ) : ?>
-		<h4 id="add-user"><?php _e('Add User to This Site'); ?></h4>
+		<h3 id="add-user"><?php _e( 'Add User to This Site' ); ?></h3>
 			<?php
 			if ( current_user_can( 'create_users' )
 				AND apply_filters( 'show_network_site_users_add_new_form', true ) ) : ?>
@@ -119,7 +120,7 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_v15 
 			<?php else : ?>
 		<p><?php _e( 'You may add from existing network users to this site.' ); ?></p>
 			<?php endif; ?>
-		<h5 id="add-existing-user"><?php _e('Add Existing User'); ?></h5>
+		<h4 id="add-existing-user"><?php _e( 'Add Existing User' ); ?></h4>
 		<form action="site-users.php?action=adduser" id="adduser" method="post">
 			<?php wp_nonce_field( 'edit-site' ); ?>
 			<input type="hidden" name="id" value="<?php echo esc_attr( $id ) ?>" />
@@ -142,9 +143,7 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_v15 
 					<?php
 					reset( $editblog_roles );
 					foreach ( $editblog_roles as $role => $role_assoc ) {
-						$name = translate_user_role( $role_assoc['name'] );
-						$selected = ( $role == $default_role ) ? ' selected="selected"' : '';
-						echo '<option' . $selected . ' value="' . esc_attr( $role ) . '">' . esc_html( $name ) . '</option>';
+						echo '<option' . selected( $role, $default_role ) . ' value="' . esc_attr( $role ) . '">' . esc_html( translate_user_role( $role_assoc['name'] ) ) . '</option>';
 					}
 					?>
 					</select></td>

@@ -1,10 +1,10 @@
 === WPMU Network Site Users Dropdown ===
-Contributors: kobenland
+Contributors: obenland
 Tags: admin, wpmu, network, network admin
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HEXL3UM8D7R6N
 Requires at least: 3.1
-Tested up to: 3.3.1
-Stable tag: 1.4.1
+Tested up to: 3.4.1
+Stable tag: 1.4.2
 
 Replace the input field for adding existing users to a site with a more comfortable dropdown menu!
 
@@ -39,6 +39,11 @@ None asked yet.
 
 == Changelog ==
 
+= 1.4.2 =
+* Maintenance release
+* Tested WordPress 3.4.1
+* Updated utility class
+
 = 1.4.1 =
 * Improved user experience when plugin is activated on a non-multisite environment.
 * Updated utility class
@@ -49,12 +54,12 @@ None asked yet.
 
 = 1.3 =
 * Fixed a bug where already associated users were in the dropdown field
-* Updated function class
+* Updated utility class
 
 = 1.2 =
 * Tested WordPress 3.1.2
 * Fixed a bug where plugin could not be activated
-* Updated function class
+* Updated utility class
 
 = 1.1 =
 * Tested WordPress 3.1.1
