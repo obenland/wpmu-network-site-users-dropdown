@@ -3,7 +3,7 @@
  * Plugin Name: WPMU Network Site Users Dropdown
  * Plugin URI:  http://www.obenlands.de/en/portfolio/wpmu-network-site-users-dropdown/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
  * Description: Replaces the input field for adding existing users to a site with a more comfortable dropdown menu.
- * Version:     2
+ * Version:     3
  * Author:      Konstantin Obenland
  * Author URI:  http://www.obenlands.de/en/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-network-site-users-dropdown
  * Text Domain: wpmu-network-site-users-dropdown
@@ -56,8 +56,6 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_V4 {
 	 * @since  1.1 - 03.04.2011
 	 * @access public
 	 * @static
-	 *
-	 * @return void
 	 */
 	public static function activation() {
 		load_plugin_textdomain( 'wpmu-network-site-users-dropdown', false, 'wpmu-network-site-users-dropdown/lang' );
@@ -80,8 +78,6 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_V4 {
 	 * @global $editblog_roles
 	 * @global $id
 	 * @global $default_role
-	 *
-	 * @return void
 	 */
 	public function network_site_users_after_list_table() {
 		global $editblog_roles, $id, $default_role, $wpdb;
@@ -151,13 +147,11 @@ class Obenland_WPMU_Network_Site_Users_Dropdown extends Obenland_Wp_Plugins_V4 {
 
 
 /**
- * Instantiates the class based on certain conditions
+ * Instantiates the class based on certain conditions.
  *
  * @author Konstantin Obenland
  * @since  1.3 - 03.05.2011
  * @global $pagenow
- *
- * @return void
  */
 function wpmunsud_instantiate() {
 	global $pagenow;
