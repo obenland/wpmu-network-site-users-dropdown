@@ -3,7 +3,7 @@ Contributors: obenland
 Tags: admin, wpmu, network, network admin
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HEXL3UM8D7R6N
 Requires at least: 3.1
-Tested up to: 6.1
+Tested up to: 6.4
 Stable tag: 3
 
 Replace the input field for adding existing users to a site with a more comfortable dropdown menu!
