@@ -77,7 +77,3 @@ None asked yet.
 
 = 1.0 =
 * Initial Release.
-
-
-== Upgrade Notice ==
-Maintenance update
