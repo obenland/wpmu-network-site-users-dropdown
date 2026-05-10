@@ -24,7 +24,7 @@ export async function loginAsAdmin( page: Page ): Promise< void > {
 export function wp( args: string[] ): string {
 	return execFileSync(
 		'npx',
-		[ 'wp-env', 'run', 'cli', 'wp', ...args ],
+		[ '--no-install', 'wp-env', 'run', 'cli', 'wp', ...args ],
 		{
 			stdio: [ 'ignore', 'pipe', 'inherit' ],
 			cwd: process.cwd(),
