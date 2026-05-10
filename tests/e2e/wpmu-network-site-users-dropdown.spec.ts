@@ -41,7 +41,12 @@ import { loginAsAdmin, wp } from './utils';
 const createdUsers: string[] = [];
 
 function createEligibleUser( prefix: string ): string {
-	const username = `${ prefix }-${ Date.now() }`;
+	// Multisite restricts usernames to lowercase letters and digits — no
+	// hyphens or dashes (`Error: Usernames can only contain lowercase
+	// letters (a-z) and numbers.`). Strip any non-alphanumerics from the
+	// prefix and use a digit-only timestamp.
+	const safePrefix = prefix.toLowerCase().replace( /[^a-z0-9]/g, '' );
+	const username = `${ safePrefix }${ Date.now() }`;
 	wp( [
 		'user',
 		'create',

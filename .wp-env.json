@@ -4,8 +4,7 @@
 	"config": {
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,
-		"SCRIPT_DEBUG": true,
-		"WP_ALLOW_MULTISITE": true
+		"SCRIPT_DEBUG": true
 	},
 	"mappings": {
 		"wp-content/plugins/wpmu-network-site-users-dropdown": "."
