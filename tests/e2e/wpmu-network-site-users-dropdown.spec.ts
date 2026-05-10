@@ -45,6 +45,10 @@ function createEligibleUser( prefix: string ): string {
 		'--role=subscriber',
 		'--user_pass=secret',
 	] );
+	// Track for cleanup before any further wp-cli call: if `remove-role`
+	// throws, the user already exists in the network and would otherwise
+	// leak.
+	createdUsers.push( username );
 	// Make sure they're NOT a member of site 1.
 	wp( [
 		'user',
@@ -54,7 +58,6 @@ function createEligibleUser( prefix: string ): string {
 		'--url=localhost',
 		'--network',
 	] );
-	createdUsers.push( username );
 	return username;
 }
 
@@ -128,8 +131,14 @@ test.describe( 'WPMU Network Site Users Dropdown', () => {
 			'site-users.php?action=adduser'
 		);
 
-		// Both core's edit-site and the plugin's add-user nonces must be
-		// present for the post to round-trip through core's handler.
+		// Both core's edit-site nonce and the plugin's add-user nonce
+		// must be present for the post to round-trip through core's
+		// handler. wp_nonce_field( 'edit-site' ) emits a hidden input
+		// with the default name `_wpnonce`; wp_nonce_field( 'add-user',
+		// '_wpnonce_add-user' ) emits one with that explicit name.
+		await expect(
+			form.locator( 'input[name="_wpnonce"]' )
+		).toBeAttached();
 		await expect(
 			form.locator( 'input[name="_wpnonce_add-user"]' )
 		).toBeAttached();
