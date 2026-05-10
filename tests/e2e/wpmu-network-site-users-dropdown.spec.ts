@@ -47,26 +47,27 @@ function createEligibleUser( prefix: string ): string {
 	// prefix and use a digit-only timestamp.
 	const safePrefix = prefix.toLowerCase().replace( /[^a-z0-9]/g, '' );
 	const username = `${ safePrefix }${ Date.now() }`;
-	wp( [
+	const userId = wp( [
 		'user',
 		'create',
 		username,
 		`${ username }@example.com`,
 		'--role=subscriber',
 		'--user_pass=secret',
+		'--porcelain',
 	] );
-	// Track for cleanup before any further wp-cli call: if `remove-role`
+	// Track for cleanup before any further wp-cli call: if the next call
 	// throws, the user already exists in the network and would otherwise
 	// leak.
 	createdUsers.push( username );
-	// Make sure they're NOT a member of site 1.
+	// Make sure they're NOT a member of site 1. `wp user remove-role`
+	// just clears the role meta but leaves the user listed by
+	// `get_users( [ "blog_id" => 1 ] )` (which is what the plugin's
+	// `exclude` filter consults). `remove_user_from_blog()` actually
+	// detaches them, so they show up as "eligible" in the dropdown.
 	wp( [
-		'user',
-		'remove-role',
-		username,
-		'subscriber',
-		'--url=localhost',
-		'--network',
+		'eval',
+		`remove_user_from_blog( ${ userId }, 1 );`,
 	] );
 	return username;
 }
