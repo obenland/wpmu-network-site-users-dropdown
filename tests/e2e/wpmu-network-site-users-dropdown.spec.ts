@@ -26,21 +26,55 @@ import { loginAsAdmin, wp } from './utils';
  * 3. The form posts back to `site-users.php?action=adduser` with the
  *    expected nonce — i.e. submitting actually wires into core's
  *    add-user handler.
+ *
+ * Each test creates a throwaway eligible user and tracks them in
+ * `createdUsers` so an `afterEach` hook deletes them even when an
+ * assertion fails partway through. Without this, leaked users would
+ * accumulate in the wp-env DB across runs and skew later tests.
  */
+
+const createdUsers: string[] = [];
+
+function createEligibleUser( prefix: string ): string {
+	const username = `${ prefix }-${ Date.now() }`;
+	wp( [
+		'user',
+		'create',
+		username,
+		`${ username }@example.com`,
+		'--role=subscriber',
+		'--user_pass=secret',
+	] );
+	// Make sure they're NOT a member of site 1.
+	wp( [
+		'user',
+		'remove-role',
+		username,
+		'subscriber',
+		'--url=localhost',
+		'--network',
+	] );
+	createdUsers.push( username );
+	return username;
+}
+
+test.afterEach( () => {
+	while ( createdUsers.length > 0 ) {
+		const username = createdUsers.pop()!;
+		try {
+			wp( [ 'user', 'delete', username, '--yes', '--network' ] );
+		} catch {
+			// Ignore — user may already be gone, or the create itself
+			// failed before the user existed in the network.
+		}
+	}
+} );
 
 test.describe( 'WPMU Network Site Users Dropdown', () => {
 	test( 'renders the dropdown form on network site-users with eligible users', async ( {
 		page,
 	} ) => {
-		// Create a user that is NOT on the main site (id=1). The default
-		// admin is on every site as super-admin, so we need a fresh
-		// account for the dropdown to have something to show.
-		const username = 'eligible-user-' + Date.now();
-		wp(
-			`user create ${ username } ${ username }@example.com --role=subscriber --user_pass=secret`
-		);
-		// Make sure they're NOT a member of site 1.
-		wp( `user remove-role ${ username } subscriber --url=localhost --network` );
+		const username = createEligibleUser( 'eligible-user' );
 
 		await loginAsAdmin( page );
 
@@ -58,9 +92,6 @@ test.describe( 'WPMU Network Site Users Dropdown', () => {
 			( els ) => els.map( ( el ) => ( el as HTMLOptionElement ).value )
 		);
 		expect( optionValues ).toContain( username );
-
-		// Cleanup so reruns don't accumulate users.
-		wp( `user delete ${ username } --yes --network` );
 	} );
 
 	test( 'suppresses the core "Add Existing User" input field', async ( {
@@ -69,11 +100,7 @@ test.describe( 'WPMU Network Site Users Dropdown', () => {
 		// Make sure there's at least one eligible user (so the plugin
 		// branch that renders the dropdown actually runs; otherwise both
 		// the core form and the plugin form would skip).
-		const username = 'suppress-test-' + Date.now();
-		wp(
-			`user create ${ username } ${ username }@example.com --role=subscriber --user_pass=secret`
-		);
-		wp( `user remove-role ${ username } subscriber --url=localhost --network` );
+		createEligibleUser( 'suppress-test' );
 
 		await loginAsAdmin( page );
 		await page.goto( '/wp-admin/network/site-users.php?id=1' );
@@ -85,18 +112,12 @@ test.describe( 'WPMU Network Site Users Dropdown', () => {
 		// short-circuit took effect.
 		const coreInput = page.locator( 'input.wp-suggest-user' );
 		await expect( coreInput ).toHaveCount( 0 );
-
-		wp( `user delete ${ username } --yes --network` );
 	} );
 
 	test( 'dropdown form posts to the core add-user endpoint with the right nonce', async ( {
 		page,
 	} ) => {
-		const username = 'nonce-test-' + Date.now();
-		wp(
-			`user create ${ username } ${ username }@example.com --role=subscriber --user_pass=secret`
-		);
-		wp( `user remove-role ${ username } subscriber --url=localhost --network` );
+		createEligibleUser( 'nonce-test' );
 
 		await loginAsAdmin( page );
 		await page.goto( '/wp-admin/network/site-users.php?id=1' );
@@ -112,7 +133,5 @@ test.describe( 'WPMU Network Site Users Dropdown', () => {
 		await expect(
 			form.locator( 'input[name="_wpnonce_add-user"]' )
 		).toBeAttached();
-
-		wp( `user delete ${ username } --yes --network` );
 	} );
 } );

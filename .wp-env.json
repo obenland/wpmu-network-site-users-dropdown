@@ -17,6 +17,6 @@
 		"BLOG_ID_CURRENT_SITE": 1
 	},
 	"lifecycleScripts": {
-		"afterStart": "wp-env run cli wp core multisite-convert"
+		"afterStart": "wp-env run cli wp eval 'if ( ! is_multisite() ) { WP_CLI::runcommand( \"core multisite-convert\" ); }'"
 	}
 }
