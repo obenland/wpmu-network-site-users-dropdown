@@ -1,0 +1,22 @@
+{
+	"core": null,
+	"phpVersion": "8.3",
+	"plugins": [
+		"."
+	],
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"SCRIPT_DEBUG": true,
+		"WP_ALLOW_MULTISITE": true,
+		"MULTISITE": true,
+		"SUBDOMAIN_INSTALL": false,
+		"DOMAIN_CURRENT_SITE": "localhost",
+		"PATH_CURRENT_SITE": "/",
+		"SITE_ID_CURRENT_SITE": 1,
+		"BLOG_ID_CURRENT_SITE": 1
+	},
+	"lifecycleScripts": {
+		"afterStart": "wp-env run cli wp core multisite-convert"
+	}
+}
