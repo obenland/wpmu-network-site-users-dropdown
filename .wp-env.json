@@ -1,0 +1,15 @@
+{
+	"core": null,
+	"phpVersion": "8.3",
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"SCRIPT_DEBUG": true
+	},
+	"mappings": {
+		"wp-content/plugins/wpmu-network-site-users-dropdown": "."
+	},
+	"lifecycleScripts": {
+		"afterStart": "npx --no-install wp-env run cli wp eval 'if ( ! is_multisite() ) { WP_CLI::runcommand( \"core multisite-convert\" ); }' && npx --no-install wp-env run cli wp plugin activate wpmu-network-site-users-dropdown --network"
+	}
+}

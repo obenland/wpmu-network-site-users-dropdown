@@ -1,0 +1,25 @@
+# Directories
+/.git
+/.github
+/.idea
+/.wordpress-org
+/bin
+/node_modules
+/playwright
+/playwright-report
+/test-results
+/tests
+/vendor
+
+# Files
+.distignore
+.gitignore
+.nvmrc
+.wp-env.json
+composer.json
+composer.lock
+package.json
+package-lock.json
+phpcs.xml.dist
+phpunit.xml
+playwright.config.ts

@@ -1,0 +1,21 @@
+{
+	"name": "wpmu-network-site-users-dropdown",
+	"version": "3.0.0",
+	"private": true,
+	"description": "Replaces the input field for adding existing users to a multisite blog with a dropdown menu.",
+	"devDependencies": {
+		"@playwright/test": "^1.47.0",
+		"@wordpress/env": "^11.4.0",
+		"@wordpress/scripts": "^32.0.0"
+	},
+	"scripts": {
+		"wp-env": "wp-env",
+		"format": "wp-scripts format",
+		"start": "wp-env start",
+		"stop": "wp-env stop",
+		"destroy": "wp-env destroy",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
+		"test:e2e:install": "playwright install --with-deps chromium"
+	}
+}
