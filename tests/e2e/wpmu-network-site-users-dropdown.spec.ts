@@ -18,14 +18,19 @@ import { loginAsAdmin, wp } from './utils';
  *   on the site, plus a role picker, an "Add User" submit button, and
  *   the same `add-user` nonce the core form uses.
  *
- * Three things to pin:
+ * Four things to pin:
  *
  * 1. The dropdown form is rendered when there are eligible users to add.
- * 2. The select contains the eligible user (and not the user already on
- *    the site).
- * 3. The form posts back to `site-users.php?action=adduser` with the
- *    expected nonce — i.e. submitting actually wires into core's
- *    add-user handler.
+ * 2. The select contains the eligible user, AND excludes a user already
+ *    on the site (the negative half of the plugin's `exclude` filter on
+ *    `get_users`).
+ * 3. The core "Add Existing User" input field is suppressed (i.e. the
+ *    `show_network_site_users_add_existing_form` short-circuit took
+ *    effect).
+ * 4. The form posts back to `site-users.php?action=adduser` with both
+ *    nonces (`_wpnonce` from `edit-site` + `_wpnonce_add-user` from the
+ *    plugin's `add-user` field) so submitting actually round-trips
+ *    through core's add-user handler.
  *
  * Each test creates a throwaway eligible user and tracks them in
  * `createdUsers` so an `afterEach` hook deletes them even when an
@@ -90,11 +95,17 @@ test.describe( 'WPMU Network Site Users Dropdown', () => {
 		const select = page.locator( 'select#newuser' );
 		await expect( select ).toBeVisible();
 
-		// The select must offer the eligible user as an option.
+		// The select must offer the eligible user as an option AND must
+		// not list `admin` (super-admin, already on every site as part
+		// of the network admin's user). The latter is the negative
+		// half of the plugin's `get_users(['exclude' => $current_site_users])`
+		// filter — without it, regressions that include already-on-site
+		// users would still pass.
 		const optionValues = await select.locator( 'option' ).evaluateAll(
 			( els ) => els.map( ( el ) => ( el as HTMLOptionElement ).value )
 		);
 		expect( optionValues ).toContain( username );
+		expect( optionValues ).not.toContain( 'admin' );
 	} );
 
 	test( 'suppresses the core "Add Existing User" input field', async ( {
