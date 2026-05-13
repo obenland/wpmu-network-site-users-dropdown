@@ -5,6 +5,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Requires at least: 3.1
 Tested up to: 6.9
 Stable tag: 3
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Replace the input field for adding existing users to a site with a more comfortable dropdown menu!
 
