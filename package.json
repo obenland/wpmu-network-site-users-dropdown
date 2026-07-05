@@ -5,7 +5,7 @@
 	"description": "Replaces the input field for adding existing users to a multisite blog with a dropdown menu.",
 	"devDependencies": {
 		"@playwright/test": "^1.61.1",
-		"@wordpress/env": "^11.8.1",
+		"@wordpress/env": "^11.10.0",
 		"@wordpress/scripts": "^32.6.0"
 	},
 	"scripts": {
