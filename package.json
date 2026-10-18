@@ -4,7 +4,7 @@
 	"private": true,
 	"description": "Replaces the input field for adding existing users to a multisite blog with a dropdown menu.",
 	"devDependencies": {
-		"@playwright/test": "^1.64.0",
+		"@playwright/test": "^1.64.1",
 		"@wordpress/env": "^11.17.0",
 		"@wordpress/scripts": "^36.1.0"
 	},
